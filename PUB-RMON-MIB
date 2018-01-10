@@ -1,0 +1,145 @@
+PUB-RMON-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    OBJECT-GROUP
+        FROM SNMPv2-CONF
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, enterprises
+        FROM SNMPv2-SMI
+    TEXTUAL-CONVENTION
+        FROM SNMPv2-TC
+;
+
+sensors MODULE-IDENTITY
+    LAST-UPDATED    "1710081800Z"
+    ORGANIZATION    "Databang SPRL"
+    CONTACT-INFO    "   Juan Cely Ramos
+                        -Software Ninja-
+                        77, rue de Wautier
+                        1020 Laeken BE
+                        juan.cely@databang.io
+                    "
+    DESCRIPTION     "IoT solutions provider"
+    ::= { enterprises 50806 }
+
+
+sensorsObjects       OBJECT IDENTIFIER ::= {sensors 1}
+sensorsConformance       OBJECT IDENTIFIER ::= {sensors 2}
+
+sensorsGroups       OBJECT IDENTIFIER ::= {sensorsConformance 1}
+
+FixedDiv10 ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d-1"
+    STATUS       current
+    DESCRIPTION  "Fixed point, one decimal"
+    SYNTAX       Integer32
+
+FixedDiv10000 ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d-4"
+    STATUS       current
+    DESCRIPTION  "Fixed point, four decimal"
+    SYNTAX       Integer32
+
+-- TSL2561 ****************************
+tsl2561Sensor     OBJECT IDENTIFIER ::= {sensorsObjects 1}
+
+tsl2561Sensor-infraredLight OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Infrared light Value in lux"
+    ::= {tsl2561Sensor 1}
+
+tsl2561Sensor-visibleLight OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Visible light Value in lux"
+    ::= {tsl2561Sensor 2}
+
+tsl2561Sensor-fullLight OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Full visible light Value in lux"
+    ::= {tsl2561Sensor 3}
+
+tsl2561Group OBJECT-GROUP
+
+    OBJECTS {
+        tsl2561Sensor-infraredLight,
+        tsl2561Sensor-visibleLight,
+        tsl2561Sensor-fullLight
+    }
+
+    STATUS current
+    DESCRIPTION "TSL2561 sensor"
+    ::= { sensorsGroups 1 }
+
+
+-- ADS7828 *****************************
+ads7828Sensor     OBJECT IDENTIFIER ::= {sensorsObjects 2}
+
+ads7828Sensor-value OBJECT-TYPE
+
+    SYNTAX FixedDiv10000
+    UNITS        "mA"
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "ADS voltage value"
+    ::= {ads7828Sensor 1}
+
+ads7828Group OBJECT-GROUP
+
+    OBJECTS {
+       ads7828Sensor-value 
+    }
+
+    STATUS current
+    DESCRIPTION "ADS7828 sensor"
+    ::= { sensorsGroups 2 }
+
+
+-- TMP75 *****************************
+tmp75Sensor     OBJECT IDENTIFIER ::= {sensorsObjects 3}
+
+tmp75Sensor-value OBJECT-TYPE
+
+    SYNTAX FixedDiv10
+    UNITS        "C"
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "TMP value in celcius"
+    ::= {tmp75Sensor 1}
+
+tmp75Group OBJECT-GROUP
+
+    OBJECTS {
+       tmp75Sensor-value 
+    }
+
+    STATUS current
+    DESCRIPTION "TMP75 sensor"
+    ::= { sensorsGroups 3 }
+
+-- LIS302 *****************************
+lis302Sensor     OBJECT IDENTIFIER ::= {sensorsObjects 4}
+
+lis302Sensor-value OBJECT-TYPE
+
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "0=ok, 1=choc, 2=down"
+    ::= {lis302Sensor 1}
+
+lis302Group OBJECT-GROUP
+
+    OBJECTS {
+       lis302Sensor-value 
+    }
+
+    STATUS current
+    DESCRIPTION "LIS302 sensor"
+    ::= { sensorsGroups 4 }
+
+END
